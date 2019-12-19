@@ -3,30 +3,30 @@
 #include <math.h>
 
 
-enum class kolor : char
+enum class node_color : char
 {
 	R, B
 };
 
 template<class T>
-class Wezel {
+class Node {
 
 public:
-	T dane;
-	Wezel<T>* father;
-	Wezel<T>* left_son;
-	Wezel<T>* right_son;
-	kolor color;
+	T data;
+	Node<T>* father;
+	Node<T>* left_son;
+	Node<T>* right_son;
+	node_color color;
 
-	int indeks;
+	int index;
 
-	Wezel() {
+	Node() {
 
 	}
-	Wezel(const T& value_dane) {
-		this->dane = value_dane;
+	Node(const T& value_data) {
+		this->data = value_data;
 	}
-	~Wezel() {
+	~Node() {
 
 	}
 
@@ -40,33 +40,33 @@ template<class T1>
 class RedBlackTree {
 
 public:
-	Wezel<T1>* root;
+	Node<T1>* root;
 	int tree_size;
 
-	Wezel<T1>* wyszukaj_element(const T1& dane);
+	Node<T1>* search_for_item(const T1& data);
 
-	void dodawanie_elementu(const T1& dane);
+	void add_item(const T1& data);
 
-	int inorder(Wezel<T1>* aWezel);
+	int inorder(Node<T1>* aNode);
 	void inorder();
 
-	int postorder(Wezel<T1>* aWezel);
+	int postorder(Node<T1>* aNode);
 	void postorder();
 
-	int preorder(Wezel<T1>* aWezel);
+	int preorder(Node<T1>* aNode);
 	void preorder();
 
-	int wyznacz_wysokosc_drzewa(Wezel<T1>* aWezel);
-	void wyznacz_wysokosc_drzewa();
+	int tree_height(Node<T1>* aNode);
+	void tree_height();
 
-	int wyswietl_drzewo(Wezel<T1>* aWezel, int p = 3);
-	void wyswietl_drzewo();
+	int display_tree(Node<T1>* aNode, int max_number_of_displayed_items = 3);
+	void display_tree();
 
-	int rotacje_w_lewo(Wezel<T1>* father);
-	int rotacje_w_prawo(Wezel<T1>* father);
+	int left_rotation(Node<T1>* father);
+	int right_rotation(Node<T1>* father);
 
-	int usun_wszystkie_wezly(Wezel<T1>* aWezel);
-	void usun_wszystkie_wezly();
+	int remove_all_nodes(Node<T1>* aNode);
+	void remove_all_nodes();
 
 
 private:
@@ -74,9 +74,9 @@ private:
 };
 
 template<class T>
-inline int RedBlackTree<T>::rotacje_w_prawo(Wezel<T>* father)
+inline int RedBlackTree<T>::right_rotation(Node<T>* father)
 {
-	Wezel<T>* element_second = father->left_son;
+	Node<T>* element_second = father->left_son;
 	father->left_son = element_second->right_son;
 
 	if (element_second->right_son != NULL) {
@@ -108,10 +108,10 @@ inline int RedBlackTree<T>::rotacje_w_prawo(Wezel<T>* father)
 }
 
 template<class T>
-inline int RedBlackTree<T>::rotacje_w_lewo(Wezel<T>* father)
+inline int RedBlackTree<T>::left_rotation(Node<T>* father)
 {
 
-	Wezel<T>* element_second = father->right_son;
+	Node<T>* element_second = father->right_son;
 	father->right_son = element_second->left_son;
 
 	if (element_second->left_son != NULL) {
@@ -144,50 +144,51 @@ inline int RedBlackTree<T>::rotacje_w_lewo(Wezel<T>* father)
 
 
 template<class T>
-inline int RedBlackTree<T>::usun_wszystkie_wezly(Wezel<T>* aWezel) {
-	if (aWezel != NULL)
+inline int RedBlackTree<T>::remove_all_nodes(Node<T>* aNode) {
+	if (aNode != NULL)
 	{
-		usun_wszystkie_wezly(aWezel->left_son);
-		usun_wszystkie_wezly(aWezel->right_son);
-		delete aWezel;
-		aWezel = NULL;
+		remove_all_nodes(aNode->left_son);
+		remove_all_nodes(aNode->right_son);
+
+		delete aNode;
+		aNode = NULL;
 	}
 	return 1;
 }
 
 template<class T>
-inline void RedBlackTree<T>::usun_wszystkie_wezly() {
-	Wezel<T>* element = this->root;
-	usun_wszystkie_wezly(element);
+inline void RedBlackTree<T>::remove_all_nodes() {
+	Node<T>* element = this->root;
+	remove_all_nodes(element);
 }
 
 template<class T>
-inline int RedBlackTree<T>::inorder(Wezel<T>* aWezel) {
+inline int RedBlackTree<T>::inorder(Node<T>* aNode) {
 	int count = 0;
-	if (aWezel)
+	if (aNode)
 	{
-		count += inorder(aWezel->left_son);
-		std::cout << aWezel->dane << "  ";
+		count += inorder(aNode->left_son);
+		std::cout << aNode->data << "  ";
 		count++;
-		count += inorder(aWezel->right_son);
+		count += inorder(aNode->right_son);
 	}
 	return count;
 }
 
 template<class T>
 inline void RedBlackTree<T>::inorder() {
-	Wezel<T>* element = this->root;
+	Node<T>* element = this->root;
 	std::cout << "Inorder : " << inorder(element) << std::endl;
 }
 
 template<class T>
-inline int RedBlackTree<T>::postorder(Wezel<T>* aWezel) {
+inline int RedBlackTree<T>::postorder(Node<T>* aNode) {
 	int count = 0;
-	if (aWezel)
+	if (aNode)
 	{
-		count += postorder(aWezel->left_son);
-		count += postorder(aWezel->right_son);
-		std::cout << aWezel->dane << "  ";
+		count += postorder(aNode->left_son);
+		count += postorder(aNode->right_son);
+		std::cout << aNode->data << "  ";
 		count++;
 	}
 	return count;
@@ -195,80 +196,80 @@ inline int RedBlackTree<T>::postorder(Wezel<T>* aWezel) {
 
 template<class T>
 inline void RedBlackTree<T>::postorder() {
-	Wezel<T>* element = this->root;
+	Node<T>* element = this->root;
 	std::cout << "Postorder : " << postorder(element) << std::endl;
 }
 
 
 template<class T>
-inline int RedBlackTree<T>::preorder(Wezel<T>* aWezel) {
+inline int RedBlackTree<T>::preorder(Node<T>* aNode) {
 	int count = 0;
-	if (aWezel)
+	if (aNode)
 	{
-		std::cout << aWezel->dane << "  ";
+		std::cout << aNode->data << "  ";
 		count++;
-		count += preorder(aWezel->left_son);
-		count += preorder(aWezel->right_son);
+		count += preorder(aNode->left_son);
+		count += preorder(aNode->right_son);
 	}
 	return count;
 }
 
 template<class T>
 inline void RedBlackTree<T>::preorder() {
-	Wezel<T>* element = this->root;
+	Node<T>* element = this->root;
 	std::cout << "Preorder : " << preorder(element) << std::endl;
 }
 
 
 template<class T>
-inline int RedBlackTree<T>::wyznacz_wysokosc_drzewa(Wezel<T>* aWezel) {
-	if (aWezel == NULL) return -1;
-	return 1 + fmax(wyznacz_wysokosc_drzewa(aWezel->left_son), wyznacz_wysokosc_drzewa(aWezel->right_son));
+inline int RedBlackTree<T>::tree_height(Node<T>* aNode) {
+	if (aNode == NULL) return -1;
+	return 1 + fmax(tree_height(aNode->left_son), tree_height(aNode->right_son));
 }
 
 template<class T>
-inline void RedBlackTree<T>::wyznacz_wysokosc_drzewa() {
-	Wezel<T>* element = this->root;
-	std::cout << "Wysokosc dzrewa : " << wyznacz_wysokosc_drzewa(element) << std::endl;
+inline void RedBlackTree<T>::tree_height() {
+	Node<T>* element = this->root;
+	std::cout << "Tree height : " << tree_height(element) << std::endl;
 }
 
 template<class T>
-inline int RedBlackTree<T>::wyswietl_drzewo(Wezel<T>* aWezel, int p) {
-	if (aWezel != NULL && p >= 0) {
-		wyswietl_drzewo(aWezel->left_son, p - 1);
+inline int RedBlackTree<T>::display_tree(Node<T>* aNode, int max_number_of_displayed_items) {
+	if (aNode != NULL && max_number_of_displayed_items >= 0) {
+		display_tree(aNode->left_son, max_number_of_displayed_items - 1);
 
-		std::cout << "   (" << aWezel->indeks;
+		std::cout << "   (" << aNode->index;
 
-		if (aWezel->color == kolor::B) {
+		if (aNode->color == node_color::B) {
 			std::cout << ": [ black,";
 		}
 		else {
 			std::cout << ": [ red,";
 		}
-		if (aWezel->father == NULL) {
+		if (aNode->father == NULL) {
 			std::cout << " p: NULL";
 		}
 		else {
-			std::cout << " p: " << aWezel->father->indeks;
+			std::cout << " p: " << aNode->father->index;
 		}
 
-		if (aWezel->left_son == NULL) {
+		if (aNode->left_son == NULL) {
 			std::cout << ", l: NULL";
 		}
 		else {
-			std::cout << ", l: " << aWezel->left_son->indeks;
+			std::cout << ", l: " << aNode->left_son->index;
 		}
 
-		if (aWezel->right_son == NULL) {
+		if (aNode->right_son == NULL) {
 			std::cout << ", r: NULL";
 		}
 		else {
-			std::cout << ", r: " << aWezel->right_son->indeks;
+			std::cout << ", r: " << aNode->right_son->index;
 		}
 
-		std::cout << "] (" << aWezel->dane << "));" << std::endl;
+		std::cout << "] (" << aNode->data << "));" << std::endl;
 
-		wyswietl_drzewo(aWezel->right_son, p - 1);
+		display_tree(aNode->right_son, max_number_of_displayed_items - 1);
 	}
 	else {
 		return 1;
@@ -276,26 +277,25 @@ inline int RedBlackTree<T>::wyswietl_drzewo(Wezel<T>* aWezel, int p) {
 }
 
 template<class T>
-inline void RedBlackTree<T>::wyswietl_drzewo() {
+inline void RedBlackTree<T>::display_tree() {
 
-	Wezel<T>* element = this->root;
-	wyswietl_drzewo(element);
+	Node<T>* element = this->root;
+	display_tree(element);
 }
 
 template<class T1>
-inline Wezel<T1>* RedBlackTree<T1>::wyszukaj_element(const T1& dane) {
+inline Node<T1>* RedBlackTree<T1>::search_for_item(const T1& data) {
 
-	Wezel<T1>* element = root;
+	Node<T1>* element = root;
 
 	while (element != nullptr) {
-		if (element->dane < dane) {
+		if (element->data < data) {
 			element = element->right_son;
 		}
-		else if (dane < element->dane) {
+		else if (data < element->data) {
 			element = element->left_son;
 		}
 		else {
-			//std::cout << "\nElement : " << element->dane << ";\nIndex : " << element->indeks << ";" << std::endl;
 			return element;
 		}
 	}
@@ -304,49 +304,47 @@ inline Wezel<T1>* RedBlackTree<T1>::wyszukaj_element(const T1& dane) {
 
 
 template<class T1>
-inline void RedBlackTree<T1>::dodawanie_elementu(const T1& dane)
+inline void RedBlackTree<T1>::add_item(const T1& data)
 {
-	Wezel<T1>* element = root;
+	Node<T1>* element = root;
 
 	if (this->root == NULL) {
-		this->root = element = new Wezel<T1>(dane);
-		element->color = kolor::B;
+		this->root = element = new Node<T1>(data);
+		element->color = node_color::B;
 
 		this->tree_size++;
-		element->indeks = this->tree_size - 1;
+		element->index = this->tree_size - 1;
 
 		return;
 	}
 
 	while (element != nullptr) {
-		if (element->dane < dane) {
+		if (element->data < data) {
 			if (element->right_son == nullptr) {
 
-				element->right_son = new Wezel<T1>(dane);
+				element->right_son = new Node<T1>(data);
 				element->right_son->father = element;
-				element->right_son->color = kolor::R;
+				element->right_son->color = node_color::R;
 				element = element->right_son;
 
 				this->tree_size++;
-				element->indeks = this->tree_size - 1;
-
+				element->index = this->tree_size - 1;
 
 				break;
 			}
 			element = element->right_son;
 		}
-		else if (dane < element->dane) {
+		else if (data < element->data) {
 			if (element->left_son == nullptr) {
 
-				element->left_son = new Wezel<T1>(dane);
+				element->left_son = new Node<T1>(data);
 				element->left_son->father = element;
-				element->left_son->color = kolor::R;
+				element->left_son->color = node_color::R;
 				element = element->left_son;
-				element->indeks = this->tree_size - 1;
+				element->index = this->tree_size - 1;
 
 				this->tree_size++;
-				element->indeks = this->tree_size - 1;
-
+				element->index = this->tree_size - 1;
 
 				break;
 			}
@@ -358,17 +356,17 @@ inline void RedBlackTree<T1>::dodawanie_elementu(const T1& dane)
 
 	}
 
-	while (element != root && element->father->color == kolor::R) {
+	while (element != root && element->father->color == node_color::R) {
 
 		if (element->father == element->father->father->left_son) {
 
-			Wezel<T1>* element_second = element->father->father->right_son;
+			Node<T1>* element_second = element->father->father->right_son;
 
-			if (element_second != NULL && element_second->color == kolor::R) {
+			if (element_second != NULL && element_second->color == node_color::R) {
 
-				element->father->color = kolor::B;
-				element_second->color = kolor::B;
-				element->father->father->color = kolor::R;
+				element->father->color = node_color::B;
+				element_second->color = node_color::B;
+				element->father->father->color = node_color::R;
 				element = element->father->father;
 			}
 			else {
@@ -376,40 +374,40 @@ inline void RedBlackTree<T1>::dodawanie_elementu(const T1& dane)
 				if (element == element->father->right_son) {
 
 					element = element->father;
-					rotacje_w_lewo(element);
+					left_rotation(element);
 				}
 
-				element->father->color = kolor::B;
-				element->father->father->color = kolor::R;
-				rotacje_w_prawo(element->father->father);
+				element->father->color = node_color::B;
+				element->father->father->color = node_color::R;
+				right_rotation(element->father->father);
 			}
 
 		}
 		else if (element->father == element->father->father->right_son) {
 
-			Wezel<T1>* element_second = element->father->father->left_son;
+			Node<T1>* element_second = element->father->father->left_son;
 
-			if (element_second != NULL && element_second->color == kolor::R) {
+			if (element_second != NULL && element_second->color == node_color::R) {
 
-				element->father->color = kolor::B;
-				element_second->color = kolor::B;
+				element->father->color = node_color::B;
+				element_second->color = node_color::B;
 
-				element->father->father->color = kolor::R;
+				element->father->father->color = node_color::R;
 				element = element->father->father;
 			}
 			else {
 
 				if (element == element->father->left_son) {
 					element = element->father;
-					rotacje_w_prawo(element);
+					right_rotation(element);
 				}
-				element->father->color = kolor::B;
-				element->father->father->color = kolor::R;
-				rotacje_w_lewo(element->father->father);
+				element->father->color = node_color::B;
+				element->father->father->color = node_color::R;
+				left_rotation(element->father->father);
 			}
 		}
 	}
-	root->color = kolor::B;
+	root->color = node_color::B;
 
 }
 #endif

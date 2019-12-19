@@ -1,8 +1,4 @@
-﻿//ALGO2 IS1 220A LAB03
-//Andrzej Wisznicki
-//wa42193@zut.edu.pl
-
-#include <iostream>
+﻿#include <iostream>
 
 #include "Header.h"
 
@@ -22,25 +18,25 @@
 
 
 struct some_object {
-	int liczba;
-	char litera;
+	int number;
+	char letter;
 
-	bool operator ==(const some_object& value_liczba) const {
-		return (liczba == value_liczba.liczba && litera == value_liczba.litera);
+	bool operator ==(const some_object& value_number) const {
+		return (number == value_number.number && letter == value_number.letter);
 	}
 
-	bool operator <(const some_object& value_liczba) const {
-		return (this->liczba < value_liczba.liczba || this->liczba == value_liczba.liczba && this->litera < value_liczba.litera);
+	bool operator <(const some_object& value_number) const {
+		return (this->number < value_number.number || this->number == value_number.number && this->letter < value_number.letter);
 	}
 
-	bool operator >(const some_object& value_liczba) const {
-		return (value_liczba < *this);
+	bool operator >(const some_object& value_number) const {
+		return (value_number < *this);
 	}
 
 };
 
 std::ostream& operator<<(std::ostream& out, const some_object& so) {
-	return(out << so.liczba << so.litera);
+	return(out << so.number << so.letter);
 }
 
 
@@ -61,24 +57,24 @@ int main() {
 		begin = clock();
 
 		for (int j = 0; j < n; j++) {
-			so->liczba = (rand() * 32768 + rand()) % 100000000 + 1;
-			so->litera = rand() % ('z' - 'a' + 1) + 'a';
+			so->number = (rand() * 32768 + rand()) % 100000000 + 1;
+			so->letter = rand() % ('z' - 'a' + 1) + 'a';
 
-			tree->dodawanie_elementu(*so);
+			tree->add_item(*so);
 		}
 		end = clock();
 
-		tree->wyznacz_wysokosc_drzewa();
+		tree->tree_height();
 		std::cout << "\nRed Black Tree :" << std::endl;
 		std::cout << "Tree size : " << tree->tree_size << std::endl;
 		std::cout << "{" << std::endl;
 
-		tree->wyswietl_drzewo();
+		tree->display_tree();
 
 		std::cout << "}" << std::endl;
 
 		time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-		std::cout << "Czas na wstawienie : " << time_spent << " s" << std::endl;
+		std::cout << "Time to insert : " << time_spent << " s" << std::endl;
 
 		const int m = pow(10, 4);
 		int hits = 0;
@@ -86,10 +82,10 @@ int main() {
 		begin = clock();
 
 		for (int j = 0; j < m; j++) {
-			so->liczba = rand() % 10000 + 1;
-			so->litera = rand() % ('z' - 'a' + 1) + 'a';
+			so->number = rand() % 10000 + 1;
+			so->letter = rand() % ('z' - 'a' + 1) + 'a';
 
-			Wezel<some_object>* result = tree->wyszukaj_element(*so);
+			Wezel<some_object>* result = tree->search_for_item(*so);
 			if (result != NULL) {
 				hits++;
 			}
@@ -99,14 +95,14 @@ int main() {
 
 		end = clock();
 		time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-		std::cout << "Czas na wyszukiwanie : " << time_spent << " s\n" << std::endl;
-		std::cout << "Liczba trafien : " << hits << std::endl;
+		std::cout << "Time to search : " << time_spent << " s\n" << std::endl;
+		std::cout << "Number of hits : " << hits << std::endl;
 
 		//tree->inorder();
 		//tree->postorder();
 		//tree->preorder();
 
-		tree->usun_wszystkie_wezly();
+		tree->remove_all_nodes();
 
 		delete tree;
 		delete so;
