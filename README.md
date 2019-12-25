@@ -5,4 +5,4 @@ All code is built on templates so that it can accept any data.
 Each node has its own color - red or black. 
 All methods are available in the RedBlackTree.h file.
 
-Developer : Andrew Vyshytskyi
+Developer : Andrew Vyshnytskyi
